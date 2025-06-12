@@ -11,6 +11,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+
+//--------- Primera parte del CQRS (Command Query Responsibility Segregation) ---------
+
 namespace Catalog.Services.Queries
 {
     public interface IProductQueryService

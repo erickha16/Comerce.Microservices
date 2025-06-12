@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//--------- Primera parte del CQRS (Command Query Responsibility Segregation) ---------
+
+
 namespace Catalog.Services.Queries
 {
     //Interface for ProductInStockQueryService
