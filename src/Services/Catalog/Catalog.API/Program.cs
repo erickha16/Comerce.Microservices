@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Catalog.Persistence.Database;
 using Catalog.Services.Queries;
+using Catalog.Service.EventHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("sql_connection"), x => 
     x.MigrationsHistoryTable("__EFMigrationsHistory", "Catalog"));
 });
+
+// MediatR configuration
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(ProductCreateEventHandler).Assembly);
+});
+
 
 //Dependency Injection for repositories and services
 builder.Services.AddTransient<IProductQueryService, ProductQueryService>();

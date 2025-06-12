@@ -1,5 +1,7 @@
-﻿using Catalog.Services.Queries;
+﻿using Catalog.Service.EventHandlers.Commands;
+using Catalog.Services.Queries;
 using Catalog.Services.Queries.DTOs;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Common.Collection;
@@ -11,10 +13,12 @@ namespace Catalog.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductQueryService _productQueryService;
+        private readonly IMediator _mediator;
 
-        public ProductController(IProductQueryService productQueryService)
+        public ProductController(IProductQueryService productQueryService, IMediator mediator)
         {
             _productQueryService = productQueryService;
+            _mediator = mediator;
         }
 
 
@@ -35,6 +39,15 @@ namespace Catalog.API.Controllers
         public async Task<ProductDTO> Get(int id)
         {
             return await _productQueryService.GetAsync(id);
+        }
+
+
+        //------------------------------------------------------------------------------------------------------- \\
+        [HttpPost]
+        public async Task<IActionResult> Create(ProductCreateCommand command)
+        {
+            await _mediator.Publish(command);
+            return Ok();
         }
     }
 }

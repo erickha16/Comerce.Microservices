@@ -1,5 +1,7 @@
-﻿using Catalog.Services.Queries;
+﻿using Catalog.Service.EventHandlers.Commands;
+using Catalog.Services.Queries;
 using Catalog.Services.Queries.DTOs;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Common.Collection;
@@ -11,10 +13,12 @@ namespace Catalog.API.Controllers
     public class ProductInStockController : ControllerBase
     {
         private readonly IProductInStockQueryService _productInStockQueryService;
+        private readonly IMediator _mediator;
 
-        public ProductInStockController(IProductInStockQueryService productInStockQueryService)
+        public ProductInStockController(IProductInStockQueryService productInStockQueryService, IMediator mediator)
         {
             _productInStockQueryService = productInStockQueryService;
+            _mediator = mediator;
         }
 
 
@@ -31,5 +35,14 @@ namespace Catalog.API.Controllers
             return await _productInStockQueryService.GetAllAsync(page, take, products);
         }
 
+        //------------------------------------------------------------------------------------------------------- \\
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateStock(ProductInStockUpdateStockCommand command)
+        {
+            await _mediator.Publish(command);
+            return NoContent();
+
+        }
     }
 }
