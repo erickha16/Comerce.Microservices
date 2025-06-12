@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Catalog.Persistence.Database;
+using Catalog.Services.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +13,20 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext and other services here
 
+//Sql configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
  options.UseSqlServer(builder.Configuration.GetConnectionString("sql_connection"), x => 
     x.MigrationsHistoryTable("__EFMigrationsHistory", "Catalog"));
 });
+
+//Dependency Injection for repositories and services
+builder.Services.AddTransient<IProductQueryService, ProductQueryService>();
+
+builder.Services.AddTransient<IProductInStockQueryService, ProductInStockQueryService>();
+
+
+
 
 
 var app = builder.Build();
